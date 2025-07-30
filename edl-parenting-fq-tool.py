@@ -6,13 +6,28 @@ import re
 
 # App 設定
 st.set_page_config(page_title="Qforia", layout="wide")
-st.title("🔍 Qforia：AI 應用查詢擴展模擬器")
+
+# 隱藏 Streamlit 的預設選單和頁首工具列
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+st.title("🔍 FQ查詢擴展模擬器-EDLx親子天下")
 
 # 側邊欄：API 金鑰輸入與查詢
 st.sidebar.header("設定")
 gemini_key = st.sidebar.text_input("Gemini API 金鑰", type="password")
 user_query = st.sidebar.text_area("輸入您的查詢", "哪款電動 SUV 最適合開上雷尼爾山？", height=120)
 mode = st.sidebar.radio("搜尋模式", ["AI 總覽 (簡易)", "AI 模式 (複雜)"])
+
+# 版權聲明
+st.sidebar.markdown("---")
+st.sidebar.caption("此工具為「EDL授權給親子天下集團使用，授權時間至2025年」")
+
 
 # 設定 Gemini
 if gemini_key:
@@ -60,6 +75,7 @@ def QUERY_FANOUT_PROMPT(q, mode):
         "1. Reformulations\n2. Related Queries\n3. Implicit Queries\n4. Comparative Queries\n5. Entity Expansions\n6. Personalized Queries\n\n"
         "The 'reasoning' field for each *individual query* should explain why that specific query was generated in relation to the original query, its type, and the overall user intent.\n"
         "Do NOT include queries dependent on real-time user history or geolocation.\n\n"
+        "**IMPORTANT LANGUAGE REQUIREMENT: All generated 'query', 'user_intent', and 'reasoning' values inside the 'expanded_queries' array MUST be in Traditional Chinese (Taiwan).**\n\n"
         "Return only a valid JSON object. The JSON object should strictly follow this format:\n"
         "{\n"
         "  \"generation_details\": {\n"
@@ -171,4 +187,3 @@ if st.sidebar.button("執行查詢擴展 🚀"):
             pass
         else: # 處理空的結果列表 (空列表，非 None)
             st.warning("⚠️ 未產生任何查詢。模型回傳了空列表，或發生了問題。")
-
