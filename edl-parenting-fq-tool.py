@@ -21,12 +21,12 @@ st.title("🔍 FQ查詢擴展模擬器-EDLx親子天下")
 # 側邊欄：API 金鑰輸入與查詢
 st.sidebar.header("設定")
 gemini_key = st.sidebar.text_input("Gemini API 金鑰", type="password")
-user_query = st.sidebar.text_area("輸入您的查詢", "哪款電動 SUV 最適合開上雷尼爾山？", height=120)
+user_query = st.sidebar.text_area("輸入您的查詢", "哪款電動 SUV 最適合開上陽明山？", height=120)
 mode = st.sidebar.radio("搜尋模式", ["AI 總覽 (簡易)", "AI 模式 (複雜)"])
 
 # 版權聲明
 st.sidebar.markdown("---")
-st.sidebar.caption("此工具為「EDL授權給親子天下集團使用，授權時間至2025年」")
+st.sidebar.caption("此工具為「EDL僅授權給親子天下集團使用，授權時間至2025年9月」")
 
 
 # 設定 Gemini
