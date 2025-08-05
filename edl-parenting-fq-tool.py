@@ -16,7 +16,7 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-st.title("🔍 FQ查詢擴展模擬器-EDLx親子天下")
+st.title("🔍 Query Fan-Out查詢擴展模擬器-EDLx親子天下")
 
 # 側邊欄：API 金鑰輸入與查詢
 st.sidebar.header("設定")
