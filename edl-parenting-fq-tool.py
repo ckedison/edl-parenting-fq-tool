@@ -32,12 +32,11 @@ st.sidebar.caption("此工具為「EDL僅授權給親子天下集團使用，授
 # 設定 Gemini
 if gemini_key:
     genai.configure(api_key=gemini_key)
-    # --- FIX 3: Changed model name again for better compatibility ---
-    # The previous name "gemini-1.5-flash-latest" resolved to a specific version
-    # that caused an access error. Using "gemini-1.5-flash" without "-latest" is
-    # often more stable and points to the recommended stable version.
-    # If this still fails, "gemini-pro" is a very reliable alternative.
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    # --- FIX 4: Switching to a more stable and universally available model ---
+    # Since access errors persist with the "1.5-flash" family, we are falling back
+    # to "gemini-pro". This is a highly reliable and widely accessible model that
+    # should resolve the 404 access errors.
+    model = genai.GenerativeModel("gemini-pro")
 else:
     st.error("請輸入您的 Gemini API 金鑰以繼續。")
     st.stop()
@@ -197,5 +196,4 @@ if st.sidebar.button("執行查詢擴展 🚀"):
             pass
         else: # 處理空的結果列表 (空列表，非 None)
             st.warning("⚠️ 未產生任何查詢。模型回傳了空列表，或發生了問題。")
-
 
