@@ -35,7 +35,7 @@ if gemini_key:
     # 確保您使用的模型能良好支援較長/複雜的 JSON 輸出。
     # 使用者模型 "gemini-2.5-flash-preview-05-20" 可能是一個特定版本；
     # 如果出現問題，可以考慮嘗試 "gemini-1.5-flash-latest" 或 "gemini-1.5-pro-latest"。
-    model = genai.GenerativeModel("gemini-1.5-flash-latest") # 使用一個常見的最新 flash 模型
+    model = genai.GenerativeModel("gemini-2.5-flash-latest") # 使用一個常見的最新 flash 模型
 else:
     st.error("請輸入您的 Gemini API 金鑰以繼續。")
     st.stop()
