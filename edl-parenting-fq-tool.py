@@ -32,10 +32,11 @@ st.sidebar.caption("此工具為「EDL僅授權給親子天下集團使用，授
 # 設定 Gemini
 if gemini_key:
     genai.configure(api_key=gemini_key)
-    # 確保您使用的模型能良好支援較長/複雜的 JSON 輸出。
-    # 使用者模型 "gemini-2.5-flash-preview-05-20" 可能是一個特定版本；
-    # 如果出現問題，可以考慮嘗試 "gemini-1.5-flash-latest" 或 "gemini-1.5-pro-latest"。
-    model = genai.GenerativeModel("gemini-2.5-flash-latest") # 使用一個常見的最新 flash 模型
+    # --- FIX 1: Corrected the model name ---
+    # "gemini-2.5-flash-latest" is not a valid model name.
+    # Switched to "gemini-1.5-flash-latest", which is a valid and powerful model.
+    # You could also use "gemini-1.5-pro-latest" for potentially more complex tasks.
+    model = genai.GenerativeModel("gemini-1.5-flash-latest")
 else:
     st.error("請輸入您的 Gemini API 金鑰以繼續。")
     st.stop()
@@ -98,9 +99,16 @@ def QUERY_FANOUT_PROMPT(q, mode):
 # 查詢擴展生成函數
 def generate_fanout(query, mode):
     prompt = QUERY_FANOUT_PROMPT(query, mode)
+    # --- FIX 2: Improved Error Handling ---
+    # Initialize response and json_text to prevent UnboundLocalError if the API call fails early.
+    response = None
+    json_text = ""
     try:
         response = model.generate_content(prompt)
-        json_text = response.text.strip()
+        # It's safer to access parts if they exist, especially with streaming/chunked responses
+        # For simple generate_content, .text is usually fine, but this is more robust.
+        json_text = ''.join(part.text for part in response.parts) if hasattr(response, 'parts') else response.text
+        json_text = json_text.strip()
         
         # 清理潛在的 markdown 程式碼區塊標記
         if json_text.startswith("```json"):
@@ -120,14 +128,15 @@ def generate_fanout(query, mode):
     except json.JSONDecodeError as e:
         st.error(f"🔴 解析 Gemini 回應的 JSON 失敗：{e}")
         st.text("導致錯誤的原始回應：")
-        st.text(json_text if 'json_text' in locals() else "無 (在 json_text 指派前發生錯誤)")
+        st.code(json_text, language="text")
         st.session_state.generation_details = None
         return None
     except Exception as e:
         st.error(f"🔴 產生過程中發生未預期的錯誤：{e}")
-        if hasattr(response, 'text'):
+        # Now this check is safe because 'response' is guaranteed to exist (it could be None)
+        if response and hasattr(response, 'text'):
              st.text("原始回應內容 (若有)：")
-             st.text(response.text)
+             st.code(response.text, language="text")
         st.session_state.generation_details = None
         return None
 
