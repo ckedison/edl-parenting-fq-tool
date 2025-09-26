@@ -32,11 +32,13 @@ st.sidebar.caption("此工具為「EDL僅授權給親子天下集團使用，授
 # 設定 Gemini
 if gemini_key:
     genai.configure(api_key=gemini_key)
-    # --- FIX 4: Switching to a more stable and universally available model ---
-    # Since access errors persist with the "1.5-flash" family, we are falling back
-    # to "gemini-pro". This is a highly reliable and widely accessible model that
-    # should resolve the 404 access errors.
-    model = genai.GenerativeModel("gemini-pro")
+    # --- FIX 5: Final attempt with the latest Pro model ---
+    # Since all previous models resulted in a 404 error, this indicates a potential
+    # access issue with the API key for older or specific model versions.
+    # We are now trying "gemini-1.5-pro-latest", which is the most current and
+    # broadly available powerful model. If this fails, the issue is likely related
+    # to the API key's project configuration or permissions, not the model name itself.
+    model = genai.GenerativeModel("gemini-1.5-pro-latest")
 else:
     st.error("請輸入您的 Gemini API 金鑰以繼續。")
     st.stop()
